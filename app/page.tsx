@@ -1,7 +1,10 @@
-import Image from "next/image";
+import Board from './components/Board';
 
 export default function Home() {
   return (
-    <h1>Vamos alla</h1>
+    <main style={{ padding: '2rem' }}>
+      <h1>3 en Raya</h1>
+      <Board />
+    </main>
   );
 }
