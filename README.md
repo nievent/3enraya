@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+PASOS PARA LANZAR EL PROYECTO.
+1. Tener instalado node.
+2. Lo acabare subiendo a mi repo de github, asi que habra que hacer un git clone https://github.com/nievent/3enraya.
+3. cd ./3enraya.
+4. npm install.
+5. npm run dev
+6. a http://localhost:3000.
+
+TECNOLOGIA UTILIZADA.
+Voy a realizar el proyecto del 3 en raya con next, react y typescript.
+
+¿POR QUÉ?
+Porque aunque he dicho en la entrevista que no he utilizado next y que sé más Javascript que Typescript me gustan los retos y quiero que esta entrevista técnica me sirva, si no para conseguir un gran puesto de trabajo, para aprender a utilizar algo nuevo.
