@@ -1,7 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './RankingTable.module.css';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 interface PlayerStats {
     nombre: string;
@@ -10,13 +12,27 @@ interface PlayerStats {
     derrotas: number;
     }
 
-const data: PlayerStats[] = [
-    { nombre: 'Jugador 1', victorias: 5, empates: 2, derrotas: 3 },
-    { nombre: 'IA', victorias: 3, empates: 2, derrotas: 5 },
-    { nombre: 'Invitado', victorias: 1, empates: 1, derrotas: 8 },
-];
 
 export default function RankingTable() {
+    const [ranking, setRanking] = useState<PlayerStats[]>([]);
+    const refreshKey = useSelector((state: RootState) => state.ranking.refreshKey);
+    const fetchRanking = async () => {
+        try {
+            const res = await fetch('/api/ranking');
+            const data = await res.json();
+            setRanking(data.ranking);
+        } catch (err) {
+            console.error('Error al cargar el ranking:', err);
+        }
+    };
+    useEffect(() => {
+        fetchRanking();
+    }, []);
+
+    useEffect(() => {
+        fetchRanking();
+    }, [refreshKey]);
+
     return (
         <div className={styles.wrapper}>
         <h2>🏆 Ranking</h2>
@@ -30,7 +46,7 @@ export default function RankingTable() {
             </tr>
             </thead>
             <tbody>
-            {data.map((jugador, idx) => (
+            {ranking.map((jugador, idx) => (
                 <tr key={idx}>
                 <td>{jugador.nombre}</td>
                 <td>{jugador.victorias}</td>

@@ -21,7 +21,6 @@ export async function POST(req: Request) {
     const collection = db.collection('partidas');
 
     await collection.insertOne(partida);
-    console.log('Partida guardada:', partida);
 
     return NextResponse.json({ status: 'ok', partida });
   } catch (error) {

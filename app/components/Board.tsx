@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Board.module.css';
 import VictoryBanner from './VictoryBanner';
+import { useDispatch } from 'react-redux';
+import { incrementRefreshKey } from '@/store/rankingSlice';
 
 type Player = 'X' | 'O' | null;
 interface BoardProps {
@@ -13,7 +15,9 @@ export default function Board({ playerName }: BoardProps) {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<Player>('X');
   const [showBanner, setShowBanner] = useState(false);
+  const dispatch = useDispatch();
   
+
 useEffect(() => {
   const makeIaMove = async () => {
     const res = await fetch('/api/ia-move', {
@@ -34,7 +38,7 @@ useEffect(() => {
   };
 
   if (currentPlayer === 'O' && !checkWinner(board)) {
-    const timeout = setTimeout(() => makeIaMove(), 500); // 0.5s "piensa"
+    const timeout = setTimeout(() => makeIaMove(), 500);
     return () => clearTimeout(timeout);
   }
 }, [currentPlayer, board]);
@@ -52,55 +56,69 @@ const handleClick = (index: number) => {
 };
 
 
-  const checkWinner = (b: Player[]): Player => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-
-    for (const [a, bIdx, c] of lines) {
-      if (b[a] && b[a] === b[bIdx] && b[a] === b[c]) {
-        return b[a];
-      }
+const checkWinner = (board: Player[]): Player => {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+//al principio elegi la b para board y luego abc para este for pero me resultó un lio mental y lo he cambiado. Hace lo mismo y creo que es mas claro asi
+  for (const [i, j, k] of lines) {
+    if (board[i] && board[i] === board[j] && board[i] === board[k]) {
+      return board[i];
     }
+  }
 
-    return null;
-  };
+  return null;
+};
+
 
   const winner = checkWinner(board);
+  const playerSymbol: Player = 'X';
+  const iaSymbol: Player = 'O';
+  const nombreDelJugador = playerName;
+  const nombreTurno = currentPlayer === playerSymbol ? nombreDelJugador : 'IA';
+  const ganadorNombre =
+    winner === playerSymbol ? nombreDelJugador
+    : winner === iaSymbol ? 'IA'
+    : winner === null ? 'Empate'
+    : '';
 
-useEffect(() => {
-  if (winner && !showBanner) {
-    setShowBanner(true);
+  const isDraw = !winner && board.every(cell => cell !== null);
+  useEffect(() => {
+    const gameOver = winner || isDraw;
+    if (gameOver && !showBanner) {
+      setShowBanner(true);
 
-    const resultado =
-      winner === null
-        ? 'empate'
-        : winner === playerSymbol
-        ? 'victoria'
-        : 'derrota';
+      const resultado =
+        winner === null
+          ? 'empate'
+          : winner === playerSymbol
+          ? 'victoria'
+          : 'derrota';
 
-fetch('/api/save-result', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ ganador: winner, jugador: playerName, resultado }),
-})
-  .then(res => res.json())
-  .then(data => {
-    console.log('✔️ Partida registrada en MongoDB:', data);
-  })
-  .catch(err => {
-    console.error('❌ Error al guardar la partida:', err);
-  });
-
-  }
-}, [winner]);
+      fetch('/api/save-result', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ganador: winner, jugador: playerName, resultado }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('✔️ Partida registrada en MongoDB:', data);
+        })
+        .then(() => {
+          dispatch(incrementRefreshKey());
+        })
+        .catch((err) => {
+          console.error('❌ Error al guardar la partida:', err);
+        });
+    }
+  }, [winner, isDraw]);
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
@@ -118,7 +136,13 @@ fetch('/api/save-result', {
     />
 
 
-      <h2>{winner ? `Ganador: ${winner}` : `Turno de: ${currentPlayer}`}</h2>
+      <h2>
+        {winner === null && board.every(cell => cell !== null)
+          ? '🤝 ¡Empate!'
+          : winner
+          ? `Ganador: ${ganadorNombre}`
+          : `Turno de: ${nombreTurno}`}
+      </h2>
       <p>Jugador: {playerName}</p>
       <div className={styles.grid}>
         {board.map((cell, idx) => (
