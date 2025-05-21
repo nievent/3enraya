@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ move });
     } catch (err) {
-        console.error('❌ Error interno en /api/ia-move:', err);
+        console.error('Error interno en /api/ia-move:', err);
         return NextResponse.json(
             { error: 'Error interno del servidor' },
             { status: 500 }

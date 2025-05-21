@@ -10,7 +10,6 @@ type Player = 'X' | 'O' | null;
 interface BoardProps {
   playerName: string;
 }
-const playerSymbol: string = 'X';
 export default function Board({ playerName }: BoardProps) {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<Player>('X');
@@ -109,13 +108,13 @@ const checkWinner = (board: Player[]): Player => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log('✔️ Partida registrada en MongoDB:', data);
+          console.log('Partida registrada en MongoDB:', data);
         })
         .then(() => {
           dispatch(incrementRefreshKey());
         })
         .catch((err) => {
-          console.error('❌ Error al guardar la partida:', err);
+          console.error('Error al guardar la partida:', err);
         });
     }
   }, [winner, isDraw]);
@@ -138,7 +137,7 @@ const checkWinner = (board: Player[]): Player => {
 
       <h2>
         {winner === null && board.every(cell => cell !== null)
-          ? '🤝 ¡Empate!'
+          ? '¡Empate!'
           : winner
           ? `Ganador: ${ganadorNombre}`
           : `Turno de: ${nombreTurno}`}
@@ -146,9 +145,14 @@ const checkWinner = (board: Player[]): Player => {
       <p>Jugador: {playerName}</p>
       <div className={styles.grid}>
         {board.map((cell, idx) => (
-          <button key={idx} className={styles.cell} onClick={() => handleClick(idx)}>
+          <button
+            key={idx}
+            className={`${styles.cell} ${cell === 'X' ? styles.cellX : ''} ${cell === 'O' ? styles.cellO : ''}`}
+            onClick={() => handleClick(idx)}
+          >
             {cell}
           </button>
+
         ))}
       </div>
 

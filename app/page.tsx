@@ -22,7 +22,7 @@ export default function Home() {
         <main className={styles.main}>
           {!nameEntered ? (
             <div className={styles.welcome}>
-              <h1>🎮 ¡Bienvenido a 3 en Raya!</h1>
+              <h1>¡Bienvenido a 3 en Raya!</h1>
               <input
                 type="text"
                 placeholder="Ingresa tu nombre"

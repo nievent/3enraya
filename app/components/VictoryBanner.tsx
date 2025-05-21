@@ -5,11 +5,12 @@ import confetti from 'canvas-confetti';
 import styles from './VictoryBanner.module.css';
 
 interface VictoryBannerProps {
-  winner: string | null;        
+  winner: string | null;
   onClose: () => void;
-  playerName: string;           
-  playerSymbol: string;          
+  playerName: string;
+  playerSymbol: 'X' | 'O' | null; 
 }
+
 
 export default function VictoryBanner({ winner, onClose, playerName, playerSymbol }: VictoryBannerProps) {
   useEffect(() => {
@@ -26,15 +27,15 @@ export default function VictoryBanner({ winner, onClose, playerName, playerSymbo
   if (!winner) return null;
 
   const isPlayerWinner = winner === playerSymbol;
-  const winnerText = isPlayerWinner ? `🎉 ¡${playerName} ha ganado la partida! 🎉` : '💻 ¡La IA ha ganado la partida!';
+  const winnerText = isPlayerWinner ? `¡${playerName} ha ganado la partida!` : '¡La IA ha ganado la partida!';
 
   return (
     <>
       <div className={styles.backdrop} onClick={onClose} />
-      <div className={styles.modal}>
-        <button className={styles.closeButton} onClick={onClose} aria-label="Cerrar banner">
-          ×
-        </button>
+        <div className={`${styles.modal} ${winner === 'O' ? styles.O : ''}`}>
+          <button className={styles.closeButton} onClick={onClose} aria-label="Cerrar banner">
+            ×
+          </button>
         <div className={styles.content}>{winnerText}</div>
       </div>
     </>

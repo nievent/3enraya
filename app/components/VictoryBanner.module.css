@@ -1,7 +1,8 @@
 .backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
     z-index: 1000;
 }
 
@@ -10,36 +11,69 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
-    padding: 2rem 3rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    background: #111;
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 0 25px #0ff, 0 0 50px #0ff66c;
     z-index: 1100;
     max-width: 90vw;
     text-align: center;
-    font-size: 1.5rem;
-    color: #065f46;
-    font-weight: 600;
-    user-select: none;
+    font-size: 1.8rem;
+    font-family: 'Courier New', Courier, monospace;
+    color: #0ff;
+    font-weight: bold;
+    text-shadow: 0 0 8px #0ff, 0 0 12px #0ff;
+    border: 2px solid #0ff;
+    animation: showUp 0.5s ease-out, pulseGlow 1.5s infinite alternate;
+}
+
+
+.modal.O {
+    color: #ff0;
+    border-color: #ff0;
+    box-shadow: 0 0 25px #ff0, 0 0 50px #ffee00;
+    text-shadow: 0 0 8px #ff0, 0 0 12px #ffee00;
 }
 
 .closeButton {
     position: absolute;
-    top: 0.5rem;
+    top: 0.7rem;
     right: 1rem;
-    background: transparent;
+    background: none;
     border: none;
     font-size: 2rem;
-    line-height: 1;
     cursor: pointer;
-    color: #333;
-    transition: color 0.2s ease;
+    color: #0ff;
+    transition: transform 0.2s ease, color 0.2s ease;
+    text-shadow: 0 0 8px #0ff;
 }
 
 .closeButton:hover {
-    color: #000;
+    color: #fff;
+    transform: scale(1.2);
 }
 
 .content {
     padding-top: 1rem;
+}
+@keyframes showUp {
+    0% {
+        transform: scale(0.5) translate(-50%, -50%);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1) translate(-50%, -50%);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) translate(-50%, -50%);
+    }
+}
+@keyframes pulseGlow {
+    from {
+        box-shadow: 0 0 20px #0ff, 0 0 40px #0ff66c;
+    }
+    to {
+        box-shadow: 0 0 40px #0ff, 0 0 80px #0ff66c;
+    }
 }

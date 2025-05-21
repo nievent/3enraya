@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ status: 'ok', partida });
   } catch (error) {
-    console.error('❌ Error en /api/save-result:', error);
+    console.error('Error en /api/save-result:', error);
     return NextResponse.json(
       { status: 'error', message: 'Error interno al guardar la partida' },
       { status: 500 }
